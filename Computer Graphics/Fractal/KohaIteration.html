@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="iterationsKohaFractal.js"></script>
+  <link rel="stylesheet" type="text/css" href="color.css" />
+</head>
+<body>
+
+  <ul>
+    <li><img src="C:\Users\lenovo\Desktop\CG\Logo.png" alt="logo" style="width:160px; height: 80px; position: left;" ></li>
+    <li><a href="C:\Users\lenovo\Desktop\CG\Fractal\Fractals.html">HOME</a></li>
+		<li><a class=active href="C:\Users\lenovo\Desktop\CG\Fractal\Fractals.html">FRACTAL</a></li>
+		<li><a  href="C:\Users\lenovo\Desktop\CG\Triangle\Triangle.html">TRIANGLE</a></li>
+		<li><a  href="C:\Users\lenovo\Desktop\CG\Color\Color model.html">COLOR MODEL</a></li>
+  </ul>
+
+  
+  <div id="app">
+    <svg>
+      <path stroke="black" fill="none"
+    stroke-width="1" :d="path" />
+    </svg>
+
+
+     <div class="controls1">
+      <label>  ITERATION </label>
+      <button v-on:click="minus1"> - </button>
+     <input type="number" v-model="iteration" name="quantity" min="0" max="1000">
+      <button v-on:click="plus1"> + </button>
+     </div>
+
+     
+     <div class="controls"> 
+      <label>KOCH FRACTAL N = :</label>
+      <button v-on:click="minus"> - </button>
+     <input type="number" v-model="fractalType" name="quantity" min="0" max="5">
+      <button v-on:click="plus"> + </button>
+    </div>
+  </div>
+
+
+  <script>
+    //var iteration = 500
+    var app = new Vue({
+   el: '#app',
+   data () {
+     return {
+       fractalType: 0,
+       iteration: 500
+     }
+   },
+   methods: {
+     plus() {
+       if (this.fractalType < 7) this.fractalType++ 
+     },
+     minus() {
+       if (this.fractalType > 0) this.fractalType--
+     },
+    plus1() {
+       if (this.iteration < 10000) this.iteration= this.iteration + 10 
+     },
+     minus1() {
+       if (this.iteration > 0) this.iteration = this.iteration - 10
+     }
+   },
+   computed: {
+     path () {
+       // Turtle graphics drawing to SVG path
+       var TAU = 2 * Math.PI;
+ 
+       var pen = true;
+       var d = "";
+       var vector = {
+         x: 0,
+         y: 1
+       };
+       var currentAngle = 0;
+ 
+       // Relative turns, angles are 0.0 to 1.0
+       var turnRight = function(angle){
+         currentAngle += angle;
+         currentAngle = currentAngle%1;
+         vector.x = Math.sin(TAU*currentAngle);
+         vector.y = Math.cos(TAU*currentAngle);
+       };
+       var turnLeft = function(angle){
+         turnRight(-angle);
+       };
+ 
+       // Absolute turn
+       var turnTo = function(angle){
+         currentAngle = angle;
+         vector.x = Math.sin(TAU*currentAngle);
+         vector.y = Math.cos(TAU*currentAngle);
+       };
+ 
+       // Drawing
+       var penUp = function(){
+         pen = false;
+       };
+       var penDown = function(){
+         pen = true;
+       };
+ 
+       // Relative moves
+       var moveForward = function (distance) {
+         d += pen ? "l " : "m ";
+         d += (distance * vector.x) + " " + (distance * vector.y) + " ";
+       }
+       function moveForwardIt(width, it)
+       {
+          var k = width/it;
+          console.log(width,k, it)
+          for(var i=0;i<it;++i)
+          {
+             if(i%2 == 0)
+             {
+                penUp()
+             }
+             else
+             {
+                penDown()
+             }
+             
+             moveForward(k);
+          }
+       }
+       function drawKoch (width, levels, it) {
+         if (levels == 0) {
+           moveForwardIt(width,it*0.25)
+           turnRight(0.15)
+           moveForwardIt(width,it*0.25)
+           turnLeft(0.3)
+           moveForwardIt(width,it*0.25)
+           turnRight(0.15)
+           moveForwardIt(width,it*0.25)
+           return;
+         } else {
+           drawKoch(width/3, levels - 1,it*0.33)
+           turnRight(0.15)
+           drawKoch(width/3, levels - 1,it*0.33 )
+           turnLeft(0.3)
+           drawKoch(width/3, levels - 1, it*0.33)
+           turnRight(0.15)
+           drawKoch(width/3, levels - 1, it*0.33)
+         }
+         
+       }
+       var h = 700//window.innerHeight
+       var w = 500//window.innerWidth / 3 - 20
+       var size = Math.min(h, w) - 50;
+       d += 'M20 ' + (h - 20)
+       turnRight(0.25)
+       drawKoch(size, this.fractalType, this.iteration)
+       return d
+     }
+   }
+ })
+ </script>
+
+
+
+<style type="text/css">
+
+html, body, #app, svg {
+height: 100%;
+width: 100%;
+
+
+
+}
+
+
+
+.controls {
+
+position: absolute;
+   left: 60%;
+   top: 200px;
+   font-size: 24px;
+   font-family: Inter; 
+}
+
+
+.controls1 {
+position: absolute;
+   left: 60%;
+   top: 250px;
+   font-size: 24px;
+   font-family: Inter; 
+}
+
+input {
+width: 2em; 
+background-color :2px solid #6C5CE7;
+border:1px solid#9086dd;
+padding: 1px 30px;
+border-radius: 31px 31px 31px 31px; 
+width:100px;
+height:40px;
+
+color:#6C5CE7;
+
+}
+
+
+input, button {
+font-family: Risque;
+font-style: normal;
+font-weight: normal;
+font-size: 28px;
+
+}
+</style>
+
+
+
+</body>
+</html>

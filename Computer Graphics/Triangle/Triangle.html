@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>TRIANGLE</title>
+    <meta charset="utf-8">
+    
+        <link href="style.css" rel="stylesheet" type="text/css">
+        <script src="selected.js"></script>
+        <script src="geometry.js"></script>
+        <script src="IFS_Fractal.js"></script>
+        <link rel="stylesheet" type="text/css" href="styleg.css" />
+    </head>
+    
+    <body>
+
+        <ul>
+            <li><img src="C:\Users\lenovo\Desktop\КГ_ЛАБИ\CG\Logo.png" alt="logo" style="width:160px; height: 80px; position: left;" ></li>
+            <li><a href="C:\Users\lenovo\Desktop\CG\Home\Home.html">HOME</a></li>
+            <li><a  href="C:\Users\lenovo\Desktop\CG\Fractal\Fractals.html">FRACTAL</a></li>
+            <li><a class=active href="Triangle.html">TRIANGLE</a></li>
+            <li><a href="C:\Users\lenovo\Desktop\CG\Color\Color model.html">COLOR MODEL</a></li>
+          </ul>
+
+            <p> TRIANGLE </p>
+
+            <p1 class="tooltip"> ENTER COEFFICIENT 
+              <span class="tooltiptext">COEFFICIENT FOR TRIANGLE</span>
+            </p1> 
+
+          <div class="ex1">
+            <input type="text" placeholder = "coefficient1" id="koef1">
+            <input type="text" placeholder = "coefficient2" id="koef2">
+
+            <p2 class="tooltip"> ENTER POINTS X and Y 
+              <span class="tooltiptext">POINTS FOR TRIANGLE</span> </p2>
+
+            <input type="text" placeholder = "x1"  id="x1">
+            <input type="text" placeholder = "y1" id="y1">
+            <input type="text" placeholder = "x2" id="x2">
+            <input type="text" placeholder = "y2" id="y2">
+            <input type="text" placeholder = "x3" id="x3">
+            <input type="text" placeholder = "y3" id="y3">
+        </div>
+
+
+        <button class="buttonrender" onclick="Draw()">DRAW</button>
+
+
+     
+        <div id="myDiv" class="container" ></div> 
+        <canvas class="myCanvas">
+     
+        </canvas>
+    
+        <script>
+          const canvas = document.querySelector('.myCanvas');
+          const width = canvas.width = window.innerWidth;
+          const height = canvas.height = window.innerHeight;
+          
+          const ctx = canvas.getContext('2d');
+    
+          ctx.fillStyle = 'white';
+         ctx.fillRect(0,0,width,height);
+    
+          ctx.translate(width/2,height/2);
+    
+          let image = new Image();
+          image.src = 'walk-right.png';
+          image.onload = draw;
+    
+          let sprite = 0;
+          let posX = 0;
+    
+          function draw() {
+            ctx.fillRect(-(width/2),-(height/2),width,height);
+            ctx.drawImage(image, (sprite*102), 0, 102, 148, 0+posX, -74, 102, 148);
+    
+            if(posX % 13 === 0) {
+              if(sprite === 5) {
+                sprite = 0;
+              } else {
+                sprite++;
+              }
+            }
+    
+            if(posX > width/2) {
+              newStartPos = -((width/2) + 102);
+              posX = Math.ceil(newStartPos);
+              console.log(posX);
+            } else {
+              posX += 2;
+            }
+    
+            window.requestAnimationFrame(draw);
+          };
+    
+        </script>
+
+
+
+
+
+<div class="waves">
+  <svg width="100%" height="200px" fill="none">
+    <path 
+      fill=" #9086dd" 
+      d="
+        M0 67
+        C 273,183
+          822,-40
+          1920.00,106 
+
+        V 359 
+        H 0 
+        V 67
+        Z">
+      <animate 
+        repeatCount="indefinite" 
+        fill="#9086dd" 
+        attributeName="d" 
+        dur="15s" 
+        values="
+          M0 77 
+          C 473,283
+            822,-40
+            1920,116 
+
+          V 359 
+          H 0 
+          V 67 
+          Z; 
+
+          M0 77 
+          C 473,-40
+            1222,283
+            1920,136 
+
+          V 359 
+          H 0 
+          V 67 
+          Z; 
+
+          M0 77 
+          C 973,260
+            1722,-53
+            1920,120 
+
+          V 359 
+          H 0 
+          V 67 
+          Z; 
+
+          M0 77 
+          C 473,283
+            822,-40
+            1920,116 
+
+          V 359 
+          H 0 
+          V 67 
+          Z
+          ">
+      </animate>
+    </path>
+  </svg>
+</div>
+    </body>
+
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script src="geometry.js"></script>
+     
+</html>

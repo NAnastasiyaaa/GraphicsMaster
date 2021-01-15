@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>COLOR MODEL</title>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="model.css" />
+</head>
+<body>
+	<ul>
+		<li><img src="C:\Users\lenovo\Desktop\КГ_ЛАБИ\CG\Logo.png" alt="logo" style="width:160px; height: 80px; position: left;" ></li>
+		<li><a href="C:\Users\lenovo\Desktop\CG\Fractal\Fractals.html">HOME</a></li>
+		<li><a  href="C:\Users\lenovo\Desktop\CG\Fractal\Fractals.html">FRACTAL</a></li>
+		<li><a  href="C:\Users\lenovo\Desktop\CG\Triangle\Triangle.html">TRIANGLE</a></li>
+		<li><a class=active href="C:\Users\lenovo\Desktop\CG\Color\Color model.html">COLOR MODEL</a></li>
+	  </ul>
+
+
+
+  <div class="center">
+        <div class="form-input">
+          <label for="file-ip-1">UPLOAD IMAGE</label>
+          <input type="file" id="file-ip-1" accept="image/*"  onchange="showPreview(event);">
+        </div>
+      </div>
+
+
+
+	  <p>RED CORRECTION </p>
+<div class="card">
+  <div>
+    <label>
+      <span style="color: red">R</span>:
+      <input  id="rangeR" type="range" min="0" max="255" value="0" />
+      <span style="color: red" id="valueR"> 0 </span>
+    </label>
+  </div>
+</div>
+
+
+
+<div class="im1">
+		<canvas width="600" height="440" id="canvas_picker"></canvas>
+</div>
+		<div class="ex1">
+			<p1>RGB</p1>
+	<div id="rgb"> <input type="text" id="rgb" ></input></div>
+			<p2>HSL</p2>
+	<div id="hsv"> <input type="text" id="hsv" ></input></div>
+	</div>
+
+
+
+
+
+
+<script type="text/javascript">
+	function showPreview(event){
+    if(event.target.files.length > 0){
+      var img1 = URL.createObjectURL(event.target.files[0]);
+	  localStorage.setItem('img_orig', img1); 
+	  var canvas = document.getElementById('canvas_picker').getContext('2d');
+		
+	// create an image object and get it’s source
+	var img = new Image();		
+	img.src = img1;
+	$(img).load(function(){
+	  canvas.drawImage(img,0,0);
+	});
+    }
+	
+	function rgbToHex(R,G,B) {return toHex(R)+toHex(G)+toHex(B)}
+	function toHex(n) {
+	  n = parseInt(n,10);
+	  if (isNaN(n)) return "00";
+	  n = Math.max(0,Math.min(n,255));
+	  return "0123456789ABCDEF".charAt((n-n%16)/16)  + "0123456789ABCDEF".charAt(n%16);
+	}
+	
+	function RgbToHsv(r, g, b) {
+    var min = Math.min(r, g, b),
+        max = Math.max(r, g, b),
+        delta = max - min,
+        h, s, v = max;
+
+    v = Math.floor(max / 255 * 100);
+    if (max == 0) return [0, 0, 0];
+    s = Math.floor(delta / max * 100);
+    var deltadiv = delta == 0 ? 1 : delta;
+    if( r == max ) h = (g - b) / deltadiv;
+    else if(g == max) h = 2 + (b - r) / deltadiv;
+    else h = 4 + (r - g) / deltadiv;
+    h = Math.floor(h * 60);
+    if( h < 0 ) h += 360;
+	var hsv= h +','+s+','+ v;
+    return  hsv;
+	}
+	
+	
+	$('#canvas_picker').click(function(event){
+	  // getting user coordinates
+	  var x = event.pageX - this.offsetLeft;
+	  var y = event.pageY - this.offsetTop;
+	  // getting image data and RGB values
+	  var img_data = canvas.getImageData(x, y, 1, 1).data;
+	  var R = img_data[0];
+	  var G = img_data[1];
+	  var B = img_data[2];  
+	  var rgb = R + ',' + G + ',' + B;
+	  // convert RGB to HEX
+	//  var hex = rgbToHex(R,G,B);
+	   // convert RGB to HEX
+	  var hsv = RgbToHsv(R,G,B);
+	  // making the color the value of the input
+	 
+	 $('#rgb input').val(rgb);
+	  //$('#hex input').val('#' + hex);
+	  $('#hsv input').val(hsv);
+	});
+	
+
+$("#rangeR").on('input change', tintImage);
+
+
+ function tintImage(e) {
+		var img_orig = localStorage.getItem('img_orig');
+		var canvas = document.getElementById('canvas_picker').getContext('2d');
+		canvas.clearRect(0,0,600,440);
+		var img = new Image();		
+			img.src = img_orig;
+			$(img).load(function(){
+			  canvas.drawImage(img,0,0);
+			});
+	   var tint= $("#rangeR").val();   	   
+	   $('#valueR').text(tint);
+        // overlay filled rectangle using lighter composition
+        canvas.globalCompositeOperation = "lighter";
+        canvas.globalAlpha = 1;
+        canvas.fillStyle="rgb("+(tint)+",0,0)";
+        canvas.fillRect(0,0,600,440);
+		//imgElement2.src = canvas.toDataURL();
+    }
+	
+  }
+		
+</script>
+
+
+
+
+
+
+</body>
+</html>
